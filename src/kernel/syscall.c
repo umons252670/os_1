@@ -102,6 +102,8 @@ extern uint64 sys_link(void);
 extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
 extern uint64 sys_getreadcount(void);
+extern uint64 sys_trace(void);
+extern uint64 sys_gettracecount(void);
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -128,6 +130,8 @@ static uint64 (*syscalls[])(void) = {
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
 [SYS_getreadcount]   sys_getreadcount,
+[SYS_trace]   sys_trace,
+[SYS_gettracecount]   sys_gettracecount,
 };
 
 void

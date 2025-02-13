@@ -513,3 +513,14 @@ sys_getreadcount(void)
   return readcount;
 }
 
+uint64
+sys_trace(void)
+{
+  return 0;
+}
+
+uint64
+sys_gettracecount(void)
+{
+  return 0;
+}
