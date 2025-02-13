@@ -18,6 +18,8 @@
 
 // global counter for number of time `sys_read` is called
 int readcount = 0;
+// dedicated lock for counter increase
+struct spinlock readcountlock;
 
 // counter for number of time `sys_open(tracepathname)` is called
 int tracecount = 1;
@@ -81,9 +83,9 @@ sys_read(void)
   struct file *f;
   int n;
   uint64 p;
-  begin_op();
+  acquire(&readcountlock);
   readcount++;
-  end_op();
+  release(&readcountlock);
   argaddr(1, &p);
   argint(2, &n);
   if(argfd(0, 0, &f) < 0)
