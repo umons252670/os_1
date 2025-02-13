@@ -27,6 +27,12 @@ run_test () {
     eval $(cat $testfile) > tests-out/$testnum.out 2> tests-out/$testnum.err
     echo $? > tests-out/$testnum.rc
 
+    # Remove CR from all output files
+    # (ensure no EOL discrepancies for diff)
+    sed -i 's/\r$//' tests-out/$testnum.out
+    sed -i 's/\r$//' tests-out/$testnum.err
+    sed -i 's/\r$//' tests-out/$testnum.rc
+
     # post: execute this after the test is done, to clean up
     local postfile=$testdir/$testnum.post
     if [[ -f $postfile ]]; then
