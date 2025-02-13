@@ -16,6 +16,7 @@
 #include "file.h"
 #include "fcntl.h"
 
+// global counter for number of time `sys_read` is called
 int readcount = 0;
 
 // Fetch the nth word-sized system call argument as a file descriptor
