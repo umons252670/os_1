@@ -19,6 +19,13 @@
 // global counter for number of time `sys_read` is called
 int readcount = 0;
 
+// counter for number of time `sys_open(tracepathname)` is called
+int tracecount = 1;
+// whether tracing is enabled
+int traceenabled = 0;
+// path to monitor
+char tracepathname[256];
+
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
 static int
@@ -321,6 +328,10 @@ sys_open(void)
 
   begin_op();
 
+  if (traceenabled == 1 && strncmp(path, tracepathname, sizeof(path)) == 0) {
+    tracecount++;
+  }
+
   if(omode & O_CREATE){
     ip = create(path, T_FILE, 0, 0);
     if(ip == 0){
@@ -518,11 +529,22 @@ sys_getreadcount(void)
 uint64
 sys_trace(void)
 {
+  char path[256];
+
+  if(argstr(0, path, 256) < 0) {
+    return -1;
+  }
+  begin_op();
+  memset(tracepathname, 0, sizeof(tracepathname));
+  strncpy(tracepathname, path, sizeof(path));
+  traceenabled = 1;
+  tracecount = 0;
+  end_op();
   return 0;
 }
 
 uint64
 sys_gettracecount(void)
 {
-  return 0;
+  return tracecount;
 }
